@@ -1,6 +1,6 @@
 ---
 title: "Lab 03 - Take a sad plot and make it better"
-author: "User1, User2, User3 and User4 - Team Name"
+author: "User1, User2, User3 and Stuart Liu - Team Name"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -74,11 +74,11 @@ What is the difference between *wide format* data and *long format* data?
 
 
 Is the format `staff` data *wide* or *long*?
-
+The format `staff` is data *wide*
 
 How many observations are there in the data set?
 
-
+There are six observations in the data set
 
 
 ## Exercise 2
@@ -86,12 +86,12 @@ How many observations are there in the data set?
 ```{r pivoting}
 ## Uncomment and complete the following code
 
-#staff_long <- ___ %>%
-#  ___(
-#    cols = ____, 
-#    names_to = "_____",
-#    values_to = "percent"
-#    )
+staff_long <- staff %>%
+  pivot_longer(
+    cols = -faculty_type, 
+    names_to = "staff_long",
+    values_to = "percent"
+  )
 
 ```
 
@@ -99,16 +99,26 @@ How many observations are there in the data set?
 ## Exercise 3
 
 ```{r dot-plot}
-# Write your code for Exercise 3 here
-
-
+print(
+  ggplot(data = staff_long,
+       mapping = aes(x = staff_long, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_point()
+  )
 
 ```
 
 ## Exercise 4
 
 ```{r bad-line-plot}
-# Write your code for Exercise 4 here
+print(
+  ggplot(data = staff_long,
+       mapping = aes(x = staff_long, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_line()
+  )
 
 
 
@@ -117,15 +127,16 @@ How many observations are there in the data set?
 ## Exercise 5
 
 ```{r mutate-year}
-## Uncomment and complete the following code
+staff_long <- staff_long %>%
+  mutate(staff_long = as.numeric(staff_long))
 
-#staff_long <- staff_long %>%
-#  mutate(year = ______(year))
-```
-
-
-```{r working-line-plot}
-# Write your code for Exercise 5 here
+print(
+  ggplot(data = staff_long,
+       mapping = aes(x = staff_long, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_line()
+  )
 
 
 
@@ -134,7 +145,17 @@ How many observations are there in the data set?
 ## Exercise 6
 
 ```{r better-line-plot}
-# Write your code for Exercise 6 here
+print(
+  ggplot(data = staff_long,
+       mapping = aes(x = staff_long, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_line()+
+  labs(
+    title = "Percentage of employment in different year",
+    x = "Year",
+    y = "Percentage"))
+
 
 
 
@@ -145,17 +166,28 @@ How many observations are there in the data set?
 
 _Write below your ideas for adapting the line plot_
 
-* Idea 1
-* Idea 2
-* Idea 3
-* ...
+* Change the year as a type of line, then change the x-axiz to the faculty 
+* change the y-axiz label from percentage to a total number of people
+*title the x-lable for better readbility
+
+
 
 
 ## Exercise 8
 
 ```{r implement-Ex7}
 # Write your code for Exercise 8 here
-
+print(
+  ggplot(data = staff_long,
+       mapping = aes(x = faculty_type, 
+                     y = percent, 
+                     colour = year)) +
+  geom_bar(stat = "identity")+
+  labs(
+    title = "Number of employment in different year",
+    x = "Year",
+    y = "Number")+theme(axis.text.x = element_text(angle = 45, hjust = 1))
+)
 
 
 ```
