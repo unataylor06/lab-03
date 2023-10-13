@@ -1,7 +1,8 @@
 ---
 title: "Lab 03 - Take a sad plot and make it better"
 
-author: "Una, Emma, User3 and User4 - UEEGS"
+author: "Una, Emma, Eve and User4 - UEEGS"
+
 
 
 date: "`r Sys.Date()`"
