@@ -1,8 +1,6 @@
 ---
 title: "Lab 03 - Take a sad plot and make it better"
-
 author: "Una, Emma, Eve and Stuart - UEEGS"
-
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -76,16 +74,16 @@ A *wide* data set is where each row and column relate to a unique case with the 
 
 A *long* data set is where each row of the data set corresponds to a unique observation.
 
+
 The staff data set is in a *wide* format
 
 There are 11 years and 5 faculty types, so there are 11 * 5 = 55 observations in the data set
 
 
-
-
 ## Exercise 2
 
 ```{r pivoting}
+
 staff_long <- staff %>%
     pivot_longer(
     cols = c("1975","1989", "1993", "1995", "1999", "2001", 
@@ -94,12 +92,14 @@ staff_long <- staff %>%
     values_to = "percent"
     )
 
+
 ```
 
 
 ## Exercise 3
 
 ```{r dot-plot}
+
 ggplot(data = staff_long,
        mapping = aes(x = year, 
                      y = percent, 
@@ -113,11 +113,13 @@ ggplot(data = staff_long,
 ## Exercise 4
 
 ```{r bad-line-plot}
+
 ggplot(data = staff_long,
        mapping = aes(x = year, 
                      y = percent, 
                      colour = faculty_type)) +
   geom_line()
+
 
 
 
@@ -140,11 +142,13 @@ ggplot(data = staff_long,
 
 
 
+
 ```
 
 ## Exercise 6
 
 ```{r better-line-plot}
+
 ggplot(data = staff_long,
        mapping = aes(x = year, 
                      y = percent, 
@@ -161,6 +165,7 @@ ggplot(data = staff_long,
 
 
 
+
 ```
 
 ## Exercise 7
@@ -170,7 +175,7 @@ _Write below your ideas for adapting the line plot_
 * Change the colours to highlight
 * Make into several pie charts to show percentages per year
 * Mutate part-time and full-time into two variables to show easier comparison.
-* ...
+
 
 
 ## Exercise 8
