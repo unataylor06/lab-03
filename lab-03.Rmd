@@ -23,7 +23,7 @@ library(ggplot2)
 knitr::include_graphics("img/Speaking-the-world.jpg")
 ```
 
-_Write your comments about image 1 below_
+_The comma in "1,026" could be interpreted as 1026 billion, or 1.026 billion, which is a great variation. As the text states “billion” speakers then it is unlikely to be 1026 billion (ie about 1 trillion) as there are only about 8 billion people in the world. The size of the boxes do not correspond to the numbers, and it is unclear whether the length, height or area of the box is intended to correspond with the number._
 
 
 
@@ -35,7 +35,7 @@ _Write your comments about image 1 below_
 knitr::include_graphics("img/rose-pop-density-total-area-bw.jpg")
 ```
 
-_Write your comments about image 2 below_
+_In the image, the coloring makes it difficult to distinguish between Italy and Switzerland, with the text being the real indication. There are also no values or axes, which makes it difficult to assess the relationship between the countries. The title contains two variables- ‘population density’ and ‘total area’, but it is unclear which variables correspond to which component of the graph_
 
 
 
@@ -46,7 +46,7 @@ _Write your comments about image 2 below_
 knitr::include_graphics("img/life-expectancy-rule-of-law.png")
 ```
 
-_Write your comments about image 3 below_
+_The visualisation allows readers to understand the general trend between the two variables, but the lack of transparency means that at crowded areas, the data points are unreadable. Also, some of the points are different sizes, theres no values/scale on the axes, and no way to know how the variables on the axes are measured. _
 
 
 
@@ -57,7 +57,7 @@ _Write your comments about image 3 below_
 knitr::include_graphics("img/global-income-dist.PNG")
 ```
 
-_Write your comments about image 4 below_
+_The multiple density plots being combined into one makes it hard to understand. There are no values on the y-axis, and potentially outlying values on the x-axis that arent being examined/included _
 
 
 
@@ -72,13 +72,13 @@ staff <- read_csv("data/instructional-staff.csv")
 
 ## Exercise 1
 
-What is the difference between *wide format* data and *long format* data?
+A *wide* data set is where each row and column relate to a unique case with the data value appearing in a single cell.
 
+A *long* data set is where each row of the data set corresponds to a unique observation.
 
-Is the format `staff` data *wide* or *long*?
+The staff data set is in a *wide* format
 
-
-How many observations are there in the data set?
+There are 11 years and 5 faculty types, so there are 11 * 5 = 55 observations in the data set
 
 
 
@@ -86,14 +86,13 @@ How many observations are there in the data set?
 ## Exercise 2
 
 ```{r pivoting}
-## Uncomment and complete the following code
-
-#staff_long <- ___ %>%
-#  ___(
-#    cols = ____, 
-#    names_to = "_____",
-#    values_to = "percent"
-#    )
+staff_long <- staff %>%
+    pivot_longer(
+    cols = c("1975","1989", "1993", "1995", "1999", "2001", 
+             "2003", "2005", "2007", "2009" ,"2011"), 
+    names_to = "year",
+    values_to = "percent"
+    )
 
 ```
 
@@ -101,7 +100,11 @@ How many observations are there in the data set?
 ## Exercise 3
 
 ```{r dot-plot}
-# Write your code for Exercise 3 here
+ggplot(data = staff_long,
+       mapping = aes(x = year, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_point()
 
 
 
@@ -110,7 +113,11 @@ How many observations are there in the data set?
 ## Exercise 4
 
 ```{r bad-line-plot}
-# Write your code for Exercise 4 here
+ggplot(data = staff_long,
+       mapping = aes(x = year, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_line()
 
 
 
@@ -119,15 +126,17 @@ How many observations are there in the data set?
 ## Exercise 5
 
 ```{r mutate-year}
-## Uncomment and complete the following code
-
-#staff_long <- staff_long %>%
-#  mutate(year = ______(year))
+staff_long <- staff_long %>%
+  mutate(year = as.numeric(year))
 ```
 
 
 ```{r working-line-plot}
-# Write your code for Exercise 5 here
+ggplot(data = staff_long,
+       mapping = aes(x = year, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_line()
 
 
 
@@ -136,7 +145,18 @@ How many observations are there in the data set?
 ## Exercise 6
 
 ```{r better-line-plot}
-# Write your code for Exercise 6 here
+ggplot(data = staff_long,
+       mapping = aes(x = year, 
+                     y = percent, 
+                     colour = faculty_type)) +
+  geom_line() +
+  labs(
+    title = "Instructional staff employment trends, 1975–2011",
+    x = "Year",
+    y = "Percentage",
+    colour = "Faculty Type",
+    caption = "Data source: American Association of University Professors"
+  )
 
 
 
@@ -147,16 +167,41 @@ How many observations are there in the data set?
 
 _Write below your ideas for adapting the line plot_
 
-* Idea 1
-* Idea 2
-* Idea 3
+* Change the colours to highlight
+* Make into several pie charts to show percentages per year
+* Mutate part-time and full-time into two variables to show easier comparison.
 * ...
 
 
 ## Exercise 8
 
 ```{r implement-Ex7}
-# Write your code for Exercise 8 here
+staff_long <- staff_long %>%
+  mutate(part_time = 
+           case_when(
+             faculty_type == "Part-Time Faculty" ~ "Part-Time Faculty",
+             TRUE ~ "Other Faculty Types"))
+
+ggplot(data = staff_long,
+       mapping = aes(x = year, 
+                     y = percent, 
+                     group = faculty_type,  
+                        # to draw seporate lines per faculty type
+                     colour = part_time  
+                       
+       ))+
+  geom_line() +
+  scale_colour_manual(values = c("gray", "red")) +
+  theme_minimal() +
+  labs(
+    title = "Instructional staff employment trends, 1975–2011",
+    x = "Year",
+    y = "Percentage",
+    colour = "",
+    caption = "Data source: American Association of University Professors"
+  ) +
+  coord_cartesian(ylim = c(0, 45)) + 
+  theme(legend.position = "bottom")
 
 
 
